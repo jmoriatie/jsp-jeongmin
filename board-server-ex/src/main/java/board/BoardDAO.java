@@ -181,6 +181,10 @@ public class BoardDAO {
 			pstmt.executeUpdate();
 			
 			System.out.println("게시물 삭제 성공");
+			
+			pstmt.close();
+			conn.close();
+			
 			return true;
 
 		} catch (Exception e) {
@@ -191,29 +195,30 @@ public class BoardDAO {
 	}
 	
 	// 내 게시물 아닐때만 노출
-	public void plusLike(int no) {
+	public boolean plusLike(BoardDTO dto) {		
 		try {
-			BoardDTO post = null;
-			brds = getBoardList();
-			for(BoardDTO p : brds) {
-				if(p.getNo() == no) {
-					post = p;
-					post.setLikes(post.getLikes() + 1);
-					break;
-				}
-			}
-			
+			int likes = (dto.getLikes() + 1);
+			System.out.println("like: " + likes);
+
 			conn = getConnection();
-			String sql ="update board set likes=? where no =?";
+			String sql ="update board set likes=? where no=? ";
+
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, post.getLikes());
+			
+			pstmt.setInt(1, likes);
+			pstmt.setInt(2, dto.getNo());
+			
 			pstmt.executeUpdate();
 			
+//			pstmt.close();
+//			conn.close();
+			
 			System.out.println("좋아요 +1");
-
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("좋아요 유지");
 		}
+		return false;
 	}
 }

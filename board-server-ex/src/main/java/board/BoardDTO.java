@@ -20,6 +20,7 @@ public class BoardDTO {
 		this.id = id;
 		this.pw = pw;
 		this.title = title;
+		this.likes = likes;
 		this.contents = contents;
 		this.regDate = regDate;
 	}
