@@ -49,7 +49,11 @@
         <tr>
             <td>내용</td>
             <td colspan="3"><span id="content" name="content" style="overflow: scroll; width: 300px; height: 300px;"><%= post.getContents() %></span> </td>
-        </tr>        
+        </tr>     
+        <tr>
+            <td>좋아요</td>
+            <td colspan="3"><span id="likes" name="likes" style=" width: 300px; height: 300px;"><%= post.getLikes() %>개</span> </td>
+        </tr>    
     </table>
     <%if(id.equals(post.getId())){ %>
     <!-- 내 게시물: 수정, 삭제 노출 -->
@@ -57,8 +61,9 @@
     <button id="delete" onclick="location.href='_15_boardDelete.jsp?no=<%=no%>'">글삭제</button>    
     <%}else{ %>
     <!-- 내 게시물 아닐때 : 좋아요 노출 -->
-    <button id="likes" onclick="_17_LikesPro.jsp?no=<%=no%>'">좋아요</button>
+    <button id="likes" onclick="location.href='_17_likesPro.jsp?no=<%=no%>'">좋아요</button>
     <%} %>
+    
     <button id="back"  onclick="location.href='_7_boardList.jsp'">뒤로가기</button>
 </body>
 

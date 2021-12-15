@@ -42,13 +42,6 @@
             for(BoardDTO board : boardList){%>
 			<tr>
 				<td><%= board.getNo() %></td>
-				<!--  
-					타이틀 길이 조정하는 코드 작성
-					int titleLen = title.length();
-					if(titleLen > 5){
-		
-					}
-				-->
 				<td onclick="location.href='_12_boardView.jsp?no=<%=board.getNo()%>'"><%= board.getTitle() %></td>
 				<td><%= board.getId() %></td>
 				<td><%= board.getLikes() %></td>

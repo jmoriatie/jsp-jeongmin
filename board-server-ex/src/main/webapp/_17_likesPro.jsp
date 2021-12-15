@@ -12,9 +12,11 @@
 	String noString = request.getParameter("no");
 	
 	int no = Integer.parseInt(noString);
-	System.out.println("postNumber: " + no);
+	System.out.println("like: "  + no);
 	
 	BoardDAO.getInstance().plusLike(no);
+	
+	response.sendRedirect("_12_boardView.jsp?no="+no+"");
 %>
 </body>
 </html>
