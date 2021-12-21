@@ -5,8 +5,8 @@ import java.util.Calendar;
 
 public class BoardDTO {
 	private int no, likes;
-	private String id, pw, title, contents;
-	Timestamp regDate;
+	private String id, pw, title, contents, comments;
+	private Timestamp regDate;
 	
 	public BoardDTO(String id, String pw, String title, String contents, Timestamp regDate) {
 		this.id = id;
@@ -16,7 +16,7 @@ public class BoardDTO {
 		this.regDate = regDate; 
 	}
 	
-	public BoardDTO(int no, String id, String pw, String title, String contents, int likes, Timestamp regDate) {
+	public BoardDTO(int no, String id, String pw, String title, String contents, int likes, Timestamp regDate, String comments) {
 		this.no = no;
 		this.id = id;
 		this.pw = pw;
@@ -24,6 +24,7 @@ public class BoardDTO {
 		this.likes = likes;
 		this.contents = contents;
 		this.regDate = regDate;
+		this.comments = comments;
 	}
 
 	public int getNo() {
@@ -75,6 +76,16 @@ public class BoardDTO {
 	public void setRegDate(Timestamp regDate) {
 		this.regDate = regDate;
 	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}	
 	
-	
+	public void addComment(String id, String comment) {
+		this.comments += id+"="+comment+"/";
+	}
 }

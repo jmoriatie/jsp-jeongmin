@@ -1,15 +1,14 @@
 package board;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import user.UserDAO;
-import user.UserDTO;
+import member.MemberDAO;
+import member.MemberDTO;
+import util.DBManager;
 
 public class BoardDAO {
 
@@ -25,42 +24,17 @@ public class BoardDAO {
 	private BoardDAO() {
 	}
 	
-
 	private ArrayList<BoardDTO> brds = new ArrayList<BoardDTO>();
 	
-	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
-	private Connection getConnection() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver"); // ??
-			
-			String url = "jdbc:mysql://localhost:3306/board?serverTimezone=UTC";
-			String id = "root";
-			String pw = "mymySql00";
-			
-			conn = DriverManager.getConnection(url, id, pw);
-			
-			if(conn != null) {
-				System.out.println("DB연동 성공!");
-			}
-			else {
-				System.out.println("DB연동 실패!");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return conn;
-	}
 	
 	public ArrayList<BoardDTO> getBoardList(){
 		
 		try {
-			conn = getConnection();
-
 			String sql = "select * from board";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
 			brds = new ArrayList<BoardDTO>();
@@ -73,13 +47,11 @@ public class BoardDAO {
 				String contents = rs.getString(5);
 				int likes = rs.getInt(6);
 				Timestamp regDate = rs.getTimestamp(7);
+				String comments = rs.getString(8);
 				
-				BoardDTO board = new BoardDTO(no, id, pw, title, contents, likes, regDate); 
+				BoardDTO board = new BoardDTO(no, id, pw, title, contents, likes, regDate, comments); 
 				brds.add(board);
 			}
-			rs.close();
-			pstmt.close();
-			conn.close();
 			
 			System.out.println("데이터 불러오기 완료");
 		} catch (Exception e) {
@@ -88,25 +60,33 @@ public class BoardDAO {
 		}
 		return brds;
 	}
-			
+		
+	public BoardDTO getOnePost(int no) {
+		brds = getBoardList();
+		for(BoardDTO post : brds) {
+			if(post.getNo() == no) {
+				return post; 
+			}
+		}
+		return null;
+	}
+	
+	
 	public boolean boardWrite(String id, String title, String content) {
-		try {
-			conn = getConnection();
-			UserDTO user = UserDAO.getInstance().getOneUser(id); 
-			BoardDTO newPost = new BoardDTO(user.getId(), user.getPw(), title, content, new Timestamp(Calendar.getInstance().getTimeInMillis()));
+		try {			
+			MemberDTO member = checkMember(id);
+			BoardDTO newPost = new BoardDTO(member.getId(), member.getPw1(), title, content, new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			
-			// 자동증가 뺴고 입력?
-			String sql = "insert into board(id, pw, title, content, regdate) values(?, ?, ?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
+			String sql = "insert into board(id, pw, title, content, regdate, comments) values(?, ?, ?, ?, ?, ?)";
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
 			pstmt.setString(1, newPost.getId());
 			pstmt.setString(2, newPost.getPw());
 			pstmt.setString(3, newPost.getTitle());
 			pstmt.setString(4, newPost.getContents());
 			pstmt.setTimestamp(5, newPost.getRegDate());
+			pstmt.setString(6, "");
 			
 			pstmt.executeUpdate();
-			
-			brds.add(newPost);
 			
 			System.out.println("게시물 작성 완료");
 			
@@ -116,6 +96,11 @@ public class BoardDAO {
 			System.out.println("게시물 작성 실패");
 			return false;
 		}
+	}
+	
+	private MemberDTO checkMember(String id) {
+		MemberDTO member = MemberDAO.getInstance().getOneMember(id); 
+		return member;
 	}
 	
 	public boolean updateBoard(BoardDTO dto) {
@@ -129,19 +114,14 @@ public class BoardDAO {
 					break;
 				}
 			}
-			
-			conn = getConnection();
 			String sql ="update board set title=?, content=? where no =?";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
 			pstmt.setString(1, dto.getTitle());
 			pstmt.setString(2, dto.getContents());
 			pstmt.setInt(3, dto.getNo());
 			
 			pstmt.executeUpdate();
 			
-			
-			pstmt.close();
-			conn.close();
 			
 			System.out.println("수정 성공!");
 			return true;
@@ -152,12 +132,91 @@ public class BoardDAO {
 		return false;
 	}
 	
+	public boolean addComment(int no, String id, String comment) {
+		try {
+			BoardDTO post = getOnePost(no);
+			
+			post.addComment(id, comment);
+
+			String sql ="update board set comments=? where no =?";
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
+			pstmt.setString(1, post.getComments());
+			pstmt.setInt(2, post.getNo());
+			
+			pstmt.executeUpdate();
+			
+			System.out.println("댓글달기 성공!");
+			return true;
+		} catch (Exception e) {
+			System.out.println("댓글달기 실패!");
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	// 코멘트 출력
+	public ArrayList<String> printComments(int no) {
+		String tempCmts = getOnePost(no).getComments();
+		
+		if(tempCmts == null || tempCmts.equals("")) {
+			return null;
+		}
+		else {
+			String[] tempArr1 = tempCmts.split("/");
+			ArrayList<String> cmtArr = new ArrayList<String>();
+			for (String cmt : tempArr1) {
+				String[] tempArr2 = cmt.split("=");
+				System.out.println(tempArr2[0] + ":" + tempArr2[1]);
+				cmtArr.add(tempArr2[0]); // id
+				cmtArr.add(tempArr2[1]); // 댓글
+			}
+			return cmtArr;
+		}
+	}
+	
+	public boolean deleteComment(int no, String comment) {
+		BoardDTO post = getOnePost(no);
+		
+		// 기존 코멘트 옮기기
+		String[] tempArr1 = post.getComments().split("/");
+		
+		// 삭제
+		ArrayList<String> cmtArr = new ArrayList<String>();
+		for (String cmt : tempArr1) {
+			if(!cmt.equals(comment)) {
+				cmtArr.add(cmt);
+			}
+		}
+		try {
+			// 다시 새로 넣기
+			post.setComments(""); // 초기화
+
+			for(String str : cmtArr) {
+				String[] splitArr = str.split("=");
+				post.addComment(splitArr[0], splitArr[1]);
+			}
+
+			String sql ="update board set comments=? where no =?";
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
+			pstmt.setString(1, post.getComments());
+			pstmt.setInt(2, post.getNo());
+			
+			pstmt.executeUpdate();
+			
+			System.out.println("댓글삭제 성공!");
+			return true;
+		} catch (Exception e) {
+			System.out.println("댓글삭제 실패!");
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	// 회원 탈퇴시 관련 게시글 전체 삭제
 	public boolean deleteAll(String id) {
 		try {
-			conn = getConnection();
 			String sql = "delete from board where id=?";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
 			pstmt.setString(1, id);
 			
 			pstmt.executeUpdate();
@@ -174,19 +233,14 @@ public class BoardDAO {
 	
 	public boolean deleteBoard(int no) {
 		try {
-			conn = getConnection();
 			String sql = "delete from board where no=?";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
 			pstmt.setInt(1, no);
 			pstmt.executeUpdate();
 			
 			System.out.println("게시물 삭제 성공");
-			
-			pstmt.close();
-			conn.close();
-			
-			return true;
 
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("삭제 실패");
@@ -200,19 +254,15 @@ public class BoardDAO {
 			int likes = (dto.getLikes() + 1);
 			System.out.println("like: " + likes);
 
-			conn = getConnection();
 			String sql ="update board set likes=? where no=? ";
 
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getInstance().getConnection().prepareStatement(sql);
 			
 			pstmt.setInt(1, likes);
 			pstmt.setInt(2, dto.getNo());
 			
 			pstmt.executeUpdate();
-			
-			pstmt.close();
-			conn.close();
-			
+
 			System.out.println("좋아요 +1");
 			return true;
 		} catch (Exception e) {
