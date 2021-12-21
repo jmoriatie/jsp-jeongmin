@@ -89,7 +89,7 @@
                 <button onclick="location.href='_6-1_rentCarList.jsp'">더보기</button>
                 </article>
                 
-                <article id="main_art2">api?? 업체위치?흐유ㅜㅏㄴㄹ우ㅠㅣㅏㅓㄹ우ㅠㅌㅊ퓨???? 걍 게시글???</article>
+                <article id="main_art2"></article>
                 
             </section>
         </main>
