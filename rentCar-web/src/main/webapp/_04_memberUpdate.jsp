@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500&display=swap" rel="stylesheet">
 
-	<link rel="stylesheet" type="text/css" href="_02_join.css">
+	<link rel="stylesheet" type="text/css" href="resources/_02_join.css">
     <title>렌트카:회원수정</title>
 </head>
 
