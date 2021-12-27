@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500&display=swap" rel="stylesheet">
 
-	<link type="text/css" rel="stylesheet" href="resources/_01_login.css">
+	<link type="text/css" rel="stylesheet" href="resources/css/_01_login.css">
     <title>렌트카: 로그인</title>
 </head>
 

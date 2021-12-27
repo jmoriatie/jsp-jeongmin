@@ -50,7 +50,7 @@
         #title {
             font-size: 35pt;
             margin-bottom: 5vh;
-            color: #03C75B;
+            color:#0059AB;
             font-weight: 900;
             cursor: pointer;            
         }
@@ -88,7 +88,7 @@
             border-radius: 10px;
             border: solid 1px;
             background-color: #03C75B;
-            border-color: #03C75B;
+            border-color: #0059AB;
         }
 
         #remember_div{
@@ -121,7 +121,7 @@
             color: white;
             width: 300px;
             height: 35px;
-            background-color: #03C75B;
+            background-color: #0059AB;
             font-weight: 700;   
         }
 

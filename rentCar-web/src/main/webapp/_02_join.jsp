@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500&display=swap" rel="stylesheet">
 
-	<link rel="stylesheet" type="text/css" href="resources/_02_join.css">
+	<link rel="stylesheet" type="text/css" href="resources/css/_02_join.css">
     <title>렌트카:회원가입</title>
 </head>
 
@@ -25,7 +25,7 @@
                     <span id="title">RENT CAR</span><br><br>
                 </div>
                 <div class="join_main">
-                    <form method="POST" action="_02_joinPro.jsp" >
+                    <form method="POST" action="_02_joinPro.jsp" id="joinForm" >
                         <span>아이디</span><br>
                         <input type="text" name="id" id="id" placeholder="아이디">
                         <p class="message" id="id_message"></p>
@@ -44,7 +44,7 @@
 
  						<span>전화번호</span><br>
                         <input type="tel" id="tel" name="tel" placeholder="010-0000-0000">
-                        <p class="message" id="tel_message">전화번호를 입력해 주세요</p>
+                        <p class="message" id="tel_message"></p>
 
                         <span>취미</span><br>
                         <input type="text" name="hobby" id="hobby">
@@ -62,14 +62,14 @@
                         <input type="number" name="age" id="age">
                         <p class="message" id="age_message"></p>
 
-                        <input type="submit"  id="submit" value="가입하기">
+                        <input type="button" id="submitBtn" value="가입하기">
                     </form>
                 </div>
             </article>
         </section>
         <section id="sec3"></section>
     </div>
-
+	<script src="resources/javascript/_02_join.js"></script>
 </body>
 
 </html>

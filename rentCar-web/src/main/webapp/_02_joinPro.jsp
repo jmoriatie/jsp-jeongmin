@@ -10,6 +10,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+<script>
+	
+</script>
 <%
 	request.setCharacterEncoding("utf-8");
 
@@ -33,7 +36,7 @@
 			if(dao.getOneMember(id) == null){ // 중복아이디X
 				int age = Integer.parseInt(ageString);
 				MemberDTO member = new MemberDTO(id, pw1, email, tel, hobby, job, age, info);
-				if( dao.addMember(member) ){
+				if( dao.addMember(member) ){	
 					System.out.println("가입성공");
 					response.sendRedirect("_01_login.jsp?pass=null&id="+id);							
 				}else{ // 예기치 않은 상황

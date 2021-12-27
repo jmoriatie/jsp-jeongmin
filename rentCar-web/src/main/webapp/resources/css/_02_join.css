@@ -39,7 +39,7 @@
         #title {
             font-size: 35pt;
             margin-bottom: 5vh;
-            color: #03C75B;
+            color: #0059AB;
             font-weight: 900;
             cursor: pointer;            
         }
@@ -82,7 +82,7 @@
 
         #check_tel{
             width: 80px;
-            background-color: #03C75B;
+            background-color: #0059AB;
             color: white;
             font-weight: 700;
         }
@@ -94,10 +94,10 @@
             
         }
 
-        #submit{
+        #submitBtn{
             color: white;
             height: 35px;
-            background-color: #03C75B;
+            background-color: #0059AB;
             font-weight: 700;   
         }
         @media screen and (max-width: 760px) {
