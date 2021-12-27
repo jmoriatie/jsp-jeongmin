@@ -1,6 +1,6 @@
-<%@page import="user.UserDTO"%>
+<%@page import="model.dto.UserDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="user.UserDAO"%>
+<%@page import="model.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -23,32 +23,19 @@
 
 <body>
     	<%
-    	UserDAO dao = UserDAO.getInstance();
+/*     	UserDAO dao = UserDAO.getInstance();
     	
     	ArrayList<UserDTO> datas = dao.getUsers();
     	
     	for(int i=0; i<datas.size(); i++){
     		UserDTO user = datas.get(i);
     		System.out.println(String.format("%s/%s/%s", user.getId(), user.getPw(), user.getRegDate()));
-    	}                            
-    	
+    	}  */                           
     	%>
-    <h1>Index Page</h1>
-    <form>
-        <input type="button" id="login" value="login">
-        <input type="button" id="join" value="join">
-    </form>
-    
-    <script>
-    document.querySelector('input#login').addEventListener('click', e=>{
-        location.href="_5_login.jsp"
-    });
-    
-    document.querySelector('input#join').addEventListener('click', e=>{
-        location.href="_3_join.jsp"
-    });
-    
-    </script>
+    <h1>Index Page : MVC2 디벨롭</h1>
+	<button onclick="location.href='service?command=loginForm'">로그인</button>
+	<button onclick="location.href='service?command=joinForm'">회원가입</button>
+ 
 </body>
 
 </html>
