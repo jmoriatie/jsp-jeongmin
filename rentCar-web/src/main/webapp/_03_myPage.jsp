@@ -1,10 +1,10 @@
+<%@page import="board.BoardDTO"%>
+<%@page import="board.BoardDAO"%>
 <%@page import="reserve.ReserveDAO"%>
 <%@page import="reserve.ReserveDTO"%>
 <%@page import="rentCar.RentCarDAO"%>
 <%@page import="rentCar.RentCarDTO"%>
-<%@page import="model.dto.BoardDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="model.dao.BoardDAO"%>
 <%@page import="member.MemberDTO"%>
 <%@page import="member.MemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
