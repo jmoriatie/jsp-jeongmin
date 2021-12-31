@@ -12,6 +12,8 @@ import controller.action.board.BoardViewAction;
 import controller.action.board.BoardWriteAction;
 import controller.action.board.BoardWriteFormAction;
 import controller.action.user.JoinAction;
+import controller.action.user.JoinCheckAction;
+import controller.action.user.JoinCheckForm;
 import controller.action.user.JoinFormAction;
 import controller.action.user.LoginAction;
 import controller.action.user.LoginFormAction;
@@ -48,6 +50,8 @@ public class ActionFactory {
 		else if(command.equals("logout")) action = new LogoutAction();
 		else if(command.equals("joinForm")) action = new JoinFormAction();
 		else if(command.equals("join")) action = new JoinAction();
+		else if(command.equals("joinCheckForm")) action = new JoinCheckForm();
+		else if(command.equals("joinCheck")) action = new JoinCheckAction();
 		else if(command.equals("userDelete")) action = new UserDeleteAction();
 		
 		else if(command.equals("boardList")) action = new BoardListAction();

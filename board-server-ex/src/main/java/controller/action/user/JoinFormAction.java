@@ -13,7 +13,6 @@ public class JoinFormAction implements Action{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("views/_03_join.jsp").forward(request, response);
-		
 	}
 
 }

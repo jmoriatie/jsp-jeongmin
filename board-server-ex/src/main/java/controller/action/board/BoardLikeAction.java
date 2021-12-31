@@ -19,7 +19,7 @@ public class BoardLikeAction implements Action{
 		String noString = request.getParameter("no");
 		int no = Integer.parseInt(noString);
 		
-		System.out.println("likePostNum: "  + no);
+		System.out.println("[좋아요]게시물 번호: "  + no);
 		
 		BoardDTO post = dao.getOnePost(no);
 

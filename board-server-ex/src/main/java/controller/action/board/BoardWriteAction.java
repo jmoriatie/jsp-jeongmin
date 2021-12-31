@@ -27,9 +27,8 @@ public class BoardWriteAction implements Action{
 			String content = request.getParameter("content");
 			Timestamp regDate = Timestamp.valueOf(LocalDateTime.now());
 
-
-			System.out.println("title: " + title);
-			System.out.println("content: " + content);
+			System.out.println("[글등록]\n제목: " + title);
+			System.out.println("내용: " + content);
 			
 			if(!title.equals("") && !content.equals("")){
 				if (BoardDAO.getInstance().boardWrite(user.getId(), title, content)) {
@@ -42,7 +41,6 @@ public class BoardWriteAction implements Action{
 				System.out.println("제목 또는 내용이 입력되지 않았습니다");
 				url = "service?command=boardWriteForm";
 			}
-			
 			request.getRequestDispatcher(url).forward(request, response);
 			
 		

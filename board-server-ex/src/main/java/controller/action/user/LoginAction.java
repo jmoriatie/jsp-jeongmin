@@ -33,14 +33,14 @@ public class LoginAction implements Action{
 			session.setAttribute("log", user);
 			
 			UserDTO dto = (UserDTO)session.getAttribute("log");
-			System.out.println("로그인: " + dto.getId()+":"+dto.getPw());
+			System.out.println("[로그인]\nid: " + dto.getId()+", pw: "+dto.getPw());
 			
 			url = "service?command=main";
 		}
 		else {
 			url = "service?command=loginForm";
+			System.out.println("아이디 또는 비밀번호 확인");
 		}
-		System.out.println(url);
 		RequestDispatcher dpt = request.getRequestDispatcher(url);
 		dpt.forward(request, response);
 	}

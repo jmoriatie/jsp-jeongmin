@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>메인페이</title>
+<title>메인페이지</title>
 </head>
 <body>
 	<h1>메인페이지 입니다</h1>

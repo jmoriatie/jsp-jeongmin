@@ -20,14 +20,14 @@ public class JoinAction implements Action{
 		
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
-		Timestamp regDate = Timestamp.valueOf(LocalDateTime.now());
+//		Timestamp regDate = Timestamp.valueOf(LocalDateTime.now());
 		
 		UserDAO dao = UserDAO.getInstance();
 			
 		// id란 비었는지 확인 (이미 있는 id인지는 DAO에서 확인) 
-		UserDTO user =  new UserDTO(id, pw, regDate);
+		UserDTO user =  new UserDTO(id, pw);
 		if (dao.addUser(user)) {
-			System.out.println("가입 User: " + user.toString());
+			System.out.println("[회원가입]\nUser: " + user.toString());
 			url = "service?command=loginForm";
 		} else {
 			url = "service?command=joinForm";

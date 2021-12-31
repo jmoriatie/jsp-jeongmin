@@ -14,9 +14,8 @@ public class IndexAction implements Action{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	UserDAO dao = UserDAO.getInstance();
     	
-    	ArrayList<UserDTO> datas = dao.getUsers();
+    	ArrayList<UserDTO> datas = UserDAO.getInstance().getUsers();
     	
     	for(int i=0; i<datas.size(); i++){
     		UserDTO user = datas.get(i);

@@ -10,6 +10,7 @@ import java.util.Calendar;
 
 import model.dto.BoardDTO;
 import model.dto.UserDTO;
+import util.DBManager;
 
 public class BoardDAO {
 
@@ -17,6 +18,7 @@ public class BoardDAO {
 	
 	public static BoardDAO getInstance() {
 		if(instance == null) {
+			System.out.println("게시판 인스턴스 생성");
 			instance = new BoardDAO();
 		}
 		return instance;
@@ -28,39 +30,15 @@ public class BoardDAO {
 
 	private ArrayList<BoardDTO> brds = new ArrayList<BoardDTO>();
 	
-	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	
-	private Connection getConnection() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver"); // ??
-			
-			String url = "jdbc:mysql://localhost:3306/board?serverTimezone=UTC";
-			String id = "root";
-			String pw = "mymySql00";
-			
-			conn = DriverManager.getConnection(url, id, pw);
-			
-			if(conn != null) {
-				System.out.println("DB연동 성공!");
-			}
-			else {
-				System.out.println("DB연동 실패!");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return conn;
-	}
 	
 	public ArrayList<BoardDTO> getBoardList(){
 		
 		try {
-			conn = getConnection();
-
 			String sql = "select * from board";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getConnection().prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
 			brds = new ArrayList<BoardDTO>();
@@ -79,12 +57,11 @@ public class BoardDAO {
 			}
 			rs.close();
 			pstmt.close();
-			conn.close();
 			
-			System.out.println("데이터 불러오기 완료");
+			System.out.println("게시판 데이터 불러오기 완료");
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("데이터 불러오기 실패");
+			System.out.println("게시판 데이터 불러오기 실패");
 		}
 		return brds;
 	}
@@ -102,13 +79,12 @@ public class BoardDAO {
 	
 	public boolean boardWrite(String id, String title, String content) {
 		try {
-			conn = getConnection();
 			UserDTO user = UserDAO.getInstance().getOneUser(id); 
 			BoardDTO newPost = new BoardDTO(user.getId(), user.getPw(), title, content, new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			
 			// 자동증가 뺴고 입력?
 			String sql = "insert into board(id, pw, title, content, regdate) values(?, ?, ?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getConnection().prepareStatement(sql);
 			pstmt.setString(1, newPost.getId());
 			pstmt.setString(2, newPost.getPw());
 			pstmt.setString(3, newPost.getTitle());
@@ -141,18 +117,15 @@ public class BoardDAO {
 				}
 			}
 			
-			conn = getConnection();
 			String sql ="update board set title=?, content=? where no =?";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getConnection().prepareStatement(sql);
 			pstmt.setString(1, dto.getTitle());
 			pstmt.setString(2, dto.getContents());
 			pstmt.setInt(3, dto.getNo());
 			
 			pstmt.executeUpdate();
 			
-			
 			pstmt.close();
-			conn.close();
 			
 			System.out.println("수정 성공!");
 			return true;
@@ -166,9 +139,8 @@ public class BoardDAO {
 	// 회원 탈퇴시 관련 게시글 전체 삭제
 	public boolean deleteAll(String id) {
 		try {
-			conn = getConnection();
 			String sql = "delete from board where id=?";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getConnection().prepareStatement(sql);
 			pstmt.setString(1, id);
 			
 			pstmt.executeUpdate();
@@ -185,16 +157,14 @@ public class BoardDAO {
 	
 	public boolean deleteBoard(int no) {
 		try {
-			conn = getConnection();
 			String sql = "delete from board where no=?";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getConnection().prepareStatement(sql);
 			pstmt.setInt(1, no);
 			pstmt.executeUpdate();
 			
 			System.out.println("게시물 삭제 성공");
 			
 			pstmt.close();
-			conn.close();
 			
 			return true;
 
@@ -211,10 +181,8 @@ public class BoardDAO {
 			int likes = (dto.getLikes() + 1);
 			System.out.println("like: " + likes);
 
-			conn = getConnection();
 			String sql ="update board set likes=? where no=? ";
-
-			pstmt = conn.prepareStatement(sql);
+			pstmt = DBManager.getConnection().prepareStatement(sql);
 			
 			pstmt.setInt(1, likes);
 			pstmt.setInt(2, dto.getNo());
@@ -222,7 +190,6 @@ public class BoardDAO {
 			pstmt.executeUpdate();
 			
 			pstmt.close();
-			conn.close();
 			
 			System.out.println("좋아요 +1");
 			return true;

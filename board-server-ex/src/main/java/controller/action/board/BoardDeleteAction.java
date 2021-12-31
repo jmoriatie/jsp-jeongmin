@@ -20,7 +20,7 @@ public class BoardDeleteAction implements Action{
 
 		String noString = request.getParameter("no");
 		int no = Integer.parseInt(noString);
-		System.out.println("delNumber: " + no);
+		System.out.println("[게시물 삭제]\n번호: " + no);
 		
 		HttpSession session = request.getSession(false); 
 		UserDTO user = (UserDTO)session.getAttribute("log");

@@ -11,15 +11,16 @@ public class UserDTO {
 	ㄴ 자바 객체임 => src 폴더에 만듦
 	*/
 	
-	private String id, pw;
+	private String id, pw, img;
 	private Timestamp regDate;
 	
-	public UserDTO(String id, String pw, Timestamp regDate) {
+	public UserDTO(String id, String pw, Timestamp regDate, String img) {
 		this.id = id;
 		this.pw = pw;
 		this.regDate = regDate;
+		this.img = img;
 	}
-	
+
 	public UserDTO(String id, String pw) {
 		this.id = id;
 		this.pw = pw;
@@ -41,8 +42,20 @@ public class UserDTO {
 		return regDate;
 	}
 	
+	
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+
 	@Override
 	public String toString() {
-		return String.format("%s/%s/%s", id, pw, regDate);
+		return String.format("%s/%s", id, pw);
 	}
+	
+	
 }

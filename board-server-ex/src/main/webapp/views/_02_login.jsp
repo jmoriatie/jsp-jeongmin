@@ -14,5 +14,7 @@
 		<input type="password" name="pw" id="pw" placeholder="비밀번호">
 		<input type="submit" value="로그인">
 	</form>
+	<button onclick="location.href='service?command=joinCheckForm'">비밀번호 찾기</button>
+	<button onclick="location.href='service?command=index'">뒤로가기</button>
 </body>
 </html>

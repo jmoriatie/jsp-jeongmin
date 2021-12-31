@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import controller.action.Action;
 import model.dao.BoardDAO;
 import model.dto.BoardDTO;
-
+1
 public class BoardUpdateAction implements Action{
 
 	@Override
@@ -34,11 +34,16 @@ public class BoardUpdateAction implements Action{
 		if(post.getPw().equals(pw)){
 			dao.updateBoard(post);
 			url= "service?command=boardView&no="+no;
+			System.out.println("[게시물 업데이트]\n번호: " + no);
+			System.out.println("제목: " + title);
+			System.out.println("내용: " + content);
 		}
 		else{
+			System.out.println("[게시물 업데이트]\n비밀번호 맞지않음: " + no);
 			url= "service?command=boardUpdateForm&no="+no;
 		}
-		System.out.println("url: " + url);
+
+		
 		request.getRequestDispatcher(url).forward(request, response);
 	}
 }

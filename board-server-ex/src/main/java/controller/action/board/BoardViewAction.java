@@ -18,7 +18,7 @@ public class BoardViewAction implements Action{
 		String noString = request.getParameter("no");
 		int no = Integer.parseInt(noString);
 		
-		System.out.println("postNumber: " + no);
+		System.out.println("게시물 번호: " + no);
 
 		BoardDTO post = BoardDAO.getInstance().getOnePost(no);
 		

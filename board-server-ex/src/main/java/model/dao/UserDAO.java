@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import model.dto.UserDTO;
+import util.DBManager;
 
 public class UserDAO {
 	// DAO : Date Access Object
@@ -21,10 +22,12 @@ public class UserDAO {
 	// 1. Singletone Pattern
 	// ㄴ 중앙관리자의 역할이기 떄문에
 	private UserDAO() {}
-	
-	private static UserDAO instance = new UserDAO();
-
+	private static UserDAO instance = null;
 	public static UserDAO getInstance() {
+		if(instance == null) {
+			System.out.println("유저 인스턴스 생성");
+			instance = new UserDAO();
+		}
 		return instance;
 	}
 	
@@ -36,43 +39,15 @@ public class UserDAO {
 	// ㄴ 2) PreparedStatement 	: DB에 쿼리를 날릴 준비
 	// ㄴ 3) ResultSet 			: excute된 쿼리에 대한 결과값을 가져와줌
 	
-	private Connection conn = null;
 	private PreparedStatement pstmt = null;	
 	private ResultSet rs = null;
-	
-	public Connection getConnection() {
-		try {
-			// 드라이버 연동 (jdbc mysql connector (.jar)를  -> WEB-INF/lib 폴더로 넣어주기)
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			
-			// jdbc:mysql://localhost:3306/데이터베이스스키마명?serverTimezone=UTC
-			String url = "jdbc:mysql://localhost:3306/board?serverTimezone=UTC"; // 데이터베이스 주소
-			String id = "root";
-			String pw = "mymySql00";
-			
-			conn = DriverManager.getConnection(url, id, pw);
-			
-			if(conn != null) { // null 이 뜨면 성공이 될 예정임
-				System.out.println("데이터베이스 연동 성공!");
-			}
-			else {
-				System.out.println("DB연동 실패!");
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return conn;
-	}
-	
+		
 	// 데이터 조회 (객체 배열을 초기화 - 가져온 데이터에 대해서)
 	public ArrayList<UserDTO> getUsers() {
 		// 쿼리를 스트링 타입으로 작성
 		try {
-			conn = getConnection(); 				// DB 연동
-			
-			String str = "select * from users";		// spl 쿼리를 준비
-			pstmt = conn.prepareStatement(str);		// 쿼리를 prepareStatement() 메소드를 활용하여 태움
+			String sql = "select * from users";		// spl 쿼리를 준비
+			pstmt = DBManager.getConnection().prepareStatement(sql);		// 쿼리를 prepareStatement() 메소드를 활용하여 태움
 			rs = pstmt.executeQuery();				// 쿼리를 날림과 동시에 rs로 결과값을 받음 (객체로 가져옴)
 			
 			users = new ArrayList<>(); // 초기화
@@ -80,18 +55,18 @@ public class UserDAO {
 				String id = rs.getString(1); // id
 				String pw = rs.getString(2); // pw
 				Timestamp regDate = rs.getTimestamp(3); // regdate
-
-				users.add(new UserDTO(id, pw, regDate)); // 만들어놓은 객체에 추가
+				String img = rs.getString(4);
+				
+				users.add(new UserDTO(id, pw, regDate, img)); // 만들어놓은 객체에 추가
 			}
 			
-			System.out.println("데이터 불러오기 완료");
+			System.out.println("유저 데이터 불러오기 완료");
 			
 			rs.close();
 			pstmt.close();
-			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("데이터 불러오기 실패");
+			System.out.println("유저 데이터 불러오기 실패");
 		}
 		return users;
 	}
@@ -115,15 +90,14 @@ public class UserDAO {
 //		Timestamp regDate = new Timestamp(cd.getTimeInMillis());
 		if(checkUser(user.getId())) {
 			try {
-				UserDTO newUser = new UserDTO(user.getId(), user.getPw(), new Timestamp(Calendar.getInstance().getTimeInMillis())); 
-
-				conn = getConnection();
+				UserDTO newUser = new UserDTO(user.getId(), user.getPw(), new Timestamp(Calendar.getInstance().getTimeInMillis()), "user"); 
 				
-				String str = "insert into users values(?, ?, ?)";	// ? 자리는 맵핑값을 setter로 처리할 포맷이다 
-				pstmt = conn.prepareStatement(str);
+				String sql = "insert into users values(?, ?, ?, ?)";	// ? 자리는 맵핑값을 setter로 처리할 포맷이다 
+				pstmt = DBManager.getConnection().prepareStatement(sql);		// 쿼리를 prepareStatement() 메소드를 활용하여 태움
 				pstmt.setString(1, newUser.getId());
 				pstmt.setString(2, newUser.getPw());
-				pstmt.setTimestamp(3, newUser.getRegDate());		// 여기까지 쿼리 완성
+				pstmt.setTimestamp(3, newUser.getRegDate());		// 여기까지 쿼리 완성				
+				pstmt.setString(4, newUser.getImg()); 		// 기본 프로필 셋팅
 				
 				pstmt.executeUpdate();								// 완성된 쿼리를 연동된 데이터베이스에 날림		<< DB
 				
@@ -132,8 +106,6 @@ public class UserDAO {
 				System.out.println("가입 성공");
 				
 				pstmt.close();
-				conn.close();
-				
 				return true;
 				
 			} catch (Exception e) {
@@ -166,9 +138,8 @@ public class UserDAO {
 		
 		if(delIdx != -1) {
 			try {
-				conn = getConnection();
 				String sql = "DELETE FROM users where id=?";
-				pstmt = conn.prepareStatement(sql);
+				pstmt = DBManager.getConnection().prepareStatement(sql);		// 쿼리를 prepareStatement() 메소드를 활용하여 태움
 				
 				pstmt.setString(1, id);
 				

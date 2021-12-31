@@ -27,6 +27,7 @@
         <span>pw:&#9;</span><input type="text" name="pw"><br><br>
         <input type="submit" value="가입">
     </form>
+    <button onclick="location.href='service?command=main'">뒤로가기</button>
 </body>
 
 </html>
